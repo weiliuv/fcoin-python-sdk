@@ -12,8 +12,8 @@ class Fcoin():
         self.base_url = base_url
 
     def auth(self, key, secret):
-        self.key = key
-        self.secret = secret
+        self.key = bytes(key,'utf-8') 
+        self.secret = bytes(secret, 'utf-8') 
 
 
     def public_request(self, method, api_url, **payload):
@@ -30,7 +30,6 @@ class Fcoin():
 
     def get_signed(self, sig_str):
         """signed params use sha512"""
-        # sig_str = base64.b64decode(bytes(sig_str))
         sig_str = base64.b64encode(sig_str)
         signature = base64.b64encode(hmac.new(self.secret, sig_str, digestmod=hashlib.sha1).digest())
         return signature
@@ -41,8 +40,8 @@ class Fcoin():
 
         param=''
         if payload:
-            sort_pay = payload.items()
-            sort_pay.sort()
+            sort_pay = sorted(payload.items())
+            #sort_pay.sort()
             for k in sort_pay:
                 param += '&' + str(k[0]) + '=' + str(k[1])
             param = param.lstrip('&')
@@ -56,7 +55,7 @@ class Fcoin():
         elif method == 'POST':
             sig_str = method + full_url + timestamp + param
 
-        signature = self.get_signed(sig_str)
+        signature = self.get_signed(bytes(sig_str, 'utf-8'))
 
         headers = {
             'FC-ACCESS-KEY': self.key,
