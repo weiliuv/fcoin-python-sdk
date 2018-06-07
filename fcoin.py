@@ -24,7 +24,6 @@ class Fcoin():
             r.raise_for_status()
         except requests.exceptions.HTTPError as err:
             print(err)
-            sys.exit(1)
         if r.status_code == 200:
             return r.json()
 
@@ -72,7 +71,6 @@ class Fcoin():
         except requests.exceptions.HTTPError as err:
             print(err)
             print(r.text)
-            sys.exit(1)
         if r.status_code == 200:
             return r.json()
 
